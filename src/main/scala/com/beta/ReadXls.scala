@@ -8,7 +8,8 @@ object ReadXls {
     val spark = Spark.getSession()
 
     val dx = new Xls
-    val dr = dx.readData("/data/xls/ir211wk12sample.xls")
+    val dr = dx.readData
+dr.show()
 
     /*
     val dw = dx.writeData(dr,"/apps/hive/external/default/xls/","xls")

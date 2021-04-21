@@ -11,9 +11,9 @@ import scala.collection.JavaConversions.mapAsScalaMap
 class Xls {
   val Spark = new SparkConnector
   val spark = Spark.getSession()
+  case class SparkR(format: String, options:Map[String,String], location:String)
 
   def readData: DataFrame = {
-    case class SparkR(format: String, options:Map[String,String], location:String)
     val config = ConfigFactory.load("application.conf")
     val app =config.getObject("read").map({case (k, v) => (k, v.unwrapped())}).toMap
     import com.fasterxml.jackson.module.scala.DefaultScalaModule
@@ -21,14 +21,13 @@ class Xls {
     mapper.registerModule(DefaultScalaModule)
     val res =mapper.writeValueAsString(app)
 
-
     import org.json4s.native.JsonMethods._
     implicit val formats = DefaultFormats
     val Sr = parse(res).extract[SparkR]
-    val testO=mapper.writeValueAsString(Sr.options)
+
     spark.read
       .format(s"${Sr.format}")
-      .options(testO)
+      .options(Sr.options)
       .load(s"${Sr.location}")
   }
 
