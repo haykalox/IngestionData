@@ -10,8 +10,11 @@ object ReadXls {
     val dx = new Xls
     val dr = dx.readData("/data/xls/ir211wk12sample.xls")
 
+    /*
     val dw = dx.writeData(dr,"/apps/hive/external/default/xls/","xls")
 
     spark.sql("SELECT * FROM xls").show()
+ */
   }
+
 }

@@ -1,19 +1,35 @@
 package com.beta.Connector
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions.col
+import org.json4s.DefaultFormats
+
+import scala.collection.JavaConversions.mapAsScalaMap
 
 class Xls {
   val Spark = new SparkConnector
   val spark = Spark.getSession()
 
-  def readData(location: String): DataFrame = {
+  def readData: DataFrame = {
+    case class SparkR(format: String, options:Map[String,String], location:String)
+    val config = ConfigFactory.load("application.conf")
+    val app =config.getObject("read").map({case (k, v) => (k, v.unwrapped())}).toMap
+    import com.fasterxml.jackson.module.scala.DefaultScalaModule
+    val mapper = new ObjectMapper()
+    mapper.registerModule(DefaultScalaModule)
+    val res =mapper.writeValueAsString(app)
+
+
+    import org.json4s.native.JsonMethods._
+    implicit val formats = DefaultFormats
+    val Sr = parse(res).extract[SparkR]
+    val testO=mapper.writeValueAsString(Sr.options)
     spark.read
-      .format("com.crealytics.spark.excel")
-      .option("header", "true") // Required
-      .option("inferSchema", "false") // Optional, default: false
-      .load(location)
+      .format(s"${Sr.format}")
+      .options(testO)
+      .load(s"${Sr.location}")
   }
 
   def writeData(dr: DataFrame, locationD: String, tb: String): Unit = {
@@ -39,7 +55,7 @@ class Xls {
     spark.sql(s"""drop table if EXISTS $tb""")
 
 /** lecture des noms des colonne et leur type */
-    val config = ConfigFactory.load("application.conf").getConfig("tables")
+ /*   val config = ConfigFactory.load("application.conf").getConfig("tables")
     val col1 = config.getConfig("col1")
     val s1 = col1.getString("nom")
     val t1 =col1.getString("type")
@@ -78,6 +94,6 @@ class Xls {
          |STORED AS TEXTFILE
          |LOCATION '/apps/hive/external/default/$tb'
          |""".stripMargin)
-
+*/
   }
 }
