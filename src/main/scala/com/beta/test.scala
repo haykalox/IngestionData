@@ -1,18 +1,28 @@
 package com.beta
-import com.beta.Connector.SparkConnector
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.typesafe.config.ConfigFactory
+
+import scala.collection.JavaConversions.mapAsScalaMap
 
 
 object test {
   def main(args: Array[String]): Unit = {
-    val Spark = new SparkConnector
-    val spark = Spark.getSession()
+    case class schema(format: String, options:Map[String,String], location:String)
 
-    val df = spark.read
-      .format("com.crealytics.spark.excel")
-      .option("sheetName", "Info")
-      .option("header", "true")
-      .option("inferSchema","false")
-      .load("/data/xls/ir211wk12sample.xls")
-      .show()
+    val config = ConfigFactory.load("application.conf")
+    val app =config.getObject("colonne").map({case (k, v) => (k, v.unwrapped())}).toMap
+    import com.fasterxml.jackson.module.scala.DefaultScalaModule
+    val mapper = new ObjectMapper()
+    mapper.registerModule(DefaultScalaModule)
+    val res =mapper.writeValueAsString(app)
+/*
+    import org.json4s.native.JsonMethods._
+    implicit val formats = DefaultFormats
+    val Sr = parse(res).extract[SparkR]
+    */
+    println(app)
+    println("-------------------------")
+println(res)
   }
 }
