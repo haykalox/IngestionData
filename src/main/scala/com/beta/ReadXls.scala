@@ -9,13 +9,11 @@ object ReadXls {
 
     val dx = new Xls
     val dr = dx.readData
-dr.show()
 
-    /*
-    val dw = dx.writeData(dr,"/apps/hive/external/default/xls/","xls")
+    val dw = dx.writeData(dr)
 
     spark.sql("SELECT * FROM xls").show()
- */
+
   }
 
 }
