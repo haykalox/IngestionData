@@ -1,10 +1,14 @@
 package com.beta.Connector
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.scala.{DefaultScalaModule, ScalaObjectMapper}
 
-class MapToJson(app:Map[String,Any]) {
-  import com.fasterxml.jackson.module.scala.DefaultScalaModule
-  val mapper = new ObjectMapper()
+object MapToJson {
+
+  val mapper = new ObjectMapper() with ScalaObjectMapper
   mapper.registerModule(DefaultScalaModule)
-  val res =  mapper.writeValueAsString(app)
+
+  def toJson(app: Map[String, Any]): String = {
+    mapper.writeValueAsString(app)
+  }
 }
