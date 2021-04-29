@@ -10,7 +10,7 @@ class Xls {
 
   case class SparkR(format: String, options:Map[String,String], location:String)
   case class SparkW(format:String,mode:String,options:Map[String,String],location:String,TbName:String)
-  case class Sc(nom1:String,Dtype1:String,nom2:String,Dtype2:String,nom3:String,Dtype3:String,nom4:String,Dtype4:String,nom5:String,Dtype5:String,nom6:String,Dtype6:String,nom7:String,Dtype7:String)
+  case class Sc(OrderDate:String,Region:String,Rep:String,Item:String,Units:String,Units_Cost:Float,Total:Float)
   case class schema(fieldName: String, fieldType: String)
 
   def readData: DataFrame = {

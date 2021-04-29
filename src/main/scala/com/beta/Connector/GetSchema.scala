@@ -3,7 +3,7 @@ import com.typesafe.config.ConfigFactory
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json._
 
-class GetSchema extends App {
+class GetSchema  {
 
     implicit val formats = DefaultFormats
     case class schema(fieldName: String, fieldType: String)
@@ -18,7 +18,5 @@ class GetSchema extends App {
       s"${m.fieldName} ${m.fieldType}"
     }
     val res=aa.mkString(",")
-
-
 
 }
