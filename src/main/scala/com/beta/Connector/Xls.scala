@@ -53,7 +53,7 @@ class Xls {
 
     spark.sql(s"""drop table if EXISTS ${Sw.TbName}""")
 
-
+    //get Schema from application.conf
     val config = ConfigFactory.load("application.conf")
     val test =config.getList("columns").toString
     val a=test.replace("SimpleConfigList(","")
@@ -65,7 +65,7 @@ class Xls {
       s"${m.fieldName} ${m.fieldType}"
     }
     val Schema=aa.mkString(",")
-
+//
 
     spark.sql(
       s"""CREATE EXTERNAL TABLE IF NOT EXISTS
