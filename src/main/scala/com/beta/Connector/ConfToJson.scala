@@ -1,7 +1,6 @@
 package com.beta.Connector
 
 import com.typesafe.config.ConfigFactory
-
 import scala.collection.JavaConversions.mapAsScalaMap
 
 class ConfToJson(conf:String) {
